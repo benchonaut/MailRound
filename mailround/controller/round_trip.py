@@ -219,7 +219,7 @@ Kind Regards
             #parser = HeaderParser()
             #h = parser.parsestr(bin_body)
             #self.log.info(h.keys())
-            #return False
+            return False
         else:
             self.log.info("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
 
