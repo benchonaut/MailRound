@@ -142,10 +142,16 @@ class RoundTrip(threading.Thread):
         msg["To"] = self._mail_in.email
         msg['Subject'] = "[MailRound]"
 
-        msg.add_header('X-Mail-Round', str(self.uuid.hex))
-        msg.set_content("""This is a TestMail from MailRound.
+        for newheader in ('List-ID','List-Owner','Organization','Auto-Submitted','Archived-At','X-Mail-Round'):
+            if newheader == 'X-Mail-Round':
+                msg.add_header(newheader, str(self.uuid.hex))
+            else:
+                msg.add_header(newheader+'@X-Mail-Round.lan', str(self.uuid.hex))
+
+        """This is a TestMail from MailRound.
 Please do not delete this E-Mail Message.
-If MailRound works it will be deleted""")
+If MailRound works it will be deleted"""
+        msg.set_content()
         return msg
 
     def sendmail(self):
