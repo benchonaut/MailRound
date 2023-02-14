@@ -191,6 +191,7 @@ If MailRound works it will be deleted""")
     def _verify_mailround_mail(self, msg_id, data):
 
         if b"RFC822" not in data:
+            self.log.info("Found Mail without RFC822")
             return False
         bin_body = data[b"RFC822"]
 
