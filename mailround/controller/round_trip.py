@@ -212,12 +212,12 @@ Kind Regards
 
         if mail_round_uuid is None:
             self.log.info("Found Mail without UUID ")
-            for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round'):
+            for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round','List-ID','List-Owner','Organization','Auto-Submitted','Archived-At'):
                 self.log.info("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
-            parser = HeaderParser()
-            h = parser.parsestr(bin_body)
-            self.log.info(h.keys())
-            return False
+            #parser = HeaderParser()
+            #h = parser.parsestr(bin_body)
+            #self.log.info(h.keys())
+            #return False
         else:
             self.log.info("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
 
