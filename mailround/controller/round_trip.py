@@ -86,10 +86,11 @@ class RoundTrip(threading.Thread):
         if hasattr(settings, "DEBUG"):
             if settings.DEBUG:
                 self._log_handler.setLevel(logging.DEBUG)
-        #self._log_handler.setLevel(logging.DEBUG)
-        if options.debug:
-            log.setLevel(logging.DEBUG)
-            logger.setLevel(logging.DEBUG)
+        ## DANGER: always debug
+        self._log_handler.setLevel(logging.DEBUG)
+        #if options.debug:
+        #    log.setLevel(logging.DEBUG)
+        #    logger.setLevel(logging.DEBUG)
         log.addHandler(self._log_handler)
         return log
 
