@@ -157,6 +157,8 @@ Kind Regards
 
 """
         msg.set_content(msgstr+'X-Mail-Round='+str(self.uuid.hex))
+        self.log.info("MSG JSON  : "+json.dumps(msg, sort_keys=True, indent=4)+ " | ")
+
         return msg
 
     def sendmail(self):
