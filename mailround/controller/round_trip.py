@@ -136,6 +136,8 @@ class RoundTrip(threading.Thread):
 
     def _gen_mail(self):
         self.log.debug("Generate E-Mail Message")
+        start_timestamp = datetime.datetime.now()
+
         msg = email.message.EmailMessage()
 
         msg["From"] = self._mail_out.email
