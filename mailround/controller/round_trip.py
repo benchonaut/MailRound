@@ -233,7 +233,7 @@ Kind Regards
         ## in depth body search as fallback 1
         found_bdy=False
         if found_hdr is False:
-            body = msg.get_body(('plain',))
+            body = email_body.get_body(('plain',))
             if body:
                 body = body.get_content()
             if(str(body).contains('X-Mail-Round='+str(self.uuid.hex))):
