@@ -148,10 +148,15 @@ class RoundTrip(threading.Thread):
             else:
                 msg.add_header(newheader+'@X-Mail-Round.lan', str(self.uuid.hex))
 
-        """This is a TestMail from MailRound.
+        msgstr="""This is a TestMail from MailRound.
 Please do not delete this E-Mail Message.
-If MailRound works it will be deleted"""
-        msg.set_content()
+If MailRound works it will be deleted
+
+Kind Regards
+
+
+"""
+        msg.set_content(msgstr+'X-Mail-Round='+str(self.uuid.hex))
         return msg
 
     def sendmail(self):
