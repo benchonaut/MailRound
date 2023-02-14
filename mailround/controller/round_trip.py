@@ -157,7 +157,7 @@ Kind Regards
 
 """
         msg.set_content(msgstr+'X-Mail-Round='+str(self.uuid.hex))
-        self.log.info("MSG JSON  : "+json.dumps(msg, sort_keys=True, indent=4)+ " | ")
+        self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
 
         return msg
 
