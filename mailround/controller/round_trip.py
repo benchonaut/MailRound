@@ -198,6 +198,8 @@ If MailRound works it will be deleted""")
 
         if mail_round_uuid is None:
             return False
+        else:
+            self.log.debug("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
 
         if self.uuid.hex in mail_round_uuid:
             self.log.debug("Found Mail with same UUID")
