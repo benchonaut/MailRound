@@ -239,7 +239,7 @@ Kind Regards
             #if body:
             #    body = body.get_content()
 
-            if(str(email_body.as_string()).contains('X-Mail-Round='+str(self.uuid.hex))):
+            if('X-Mail-Round='+str(self.uuid.hex) in str(email_body.as_string()))
                 found_bdy=True
         ## in depth aux header search as fallback 2
         if found_hdr is False :
