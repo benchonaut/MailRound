@@ -72,6 +72,11 @@ class MailSmtpServer(MailServer):
                 conn = smtplib.SMTP(self.host, self.port)
         else:
             conn = smtplib.SMTP(self.host, self.port)
-
-        conn.login(self.credentials.username, self.credentials.password)
+        conn.ehlo()  # send the extended hello to our server
+        try:
+            conn.login(self.credentials.username, self.credentials.password)
+        except:
+            conn.starttls() # tell server we want to communicate with TLS encryption
+            conn.login(self.credentials.username, self.credentials.password)
+            
         return conn

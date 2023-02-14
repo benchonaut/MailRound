@@ -1,3 +1,4 @@
+from datetime import timedelta
 import datetime
 import email.message
 import email.utils
@@ -5,6 +6,7 @@ import io
 import json
 import logging
 import threading
+import ssl
 import urllib.parse
 import urllib.request
 import uuid
@@ -74,7 +76,6 @@ class RoundTrip(threading.Thread):
         self.log.debug("User: {}".format(self._mail_in.credentials.username))
 
     def setup_log(self):
-
         log = logging.getLogger("mailround.controller.round_trip.{}".format("_".join(self._name)))
 
         formatter = logging.Formatter('%(levelname)s:%(name)s: %(message)s')
@@ -90,6 +91,10 @@ class RoundTrip(threading.Thread):
         return log
 
     def run(self):
+        if hasattr(settings, "DEBUG"):
+            if settings.DEBUG:
+                self._log_handler.setLevel(logging.DEBUG)
+                sel.log(logging.DEBUG)
 
         StatusLog.get_instance().add_status(self.uuid.hex, self.name[0], self.name[1], "start")
         try:
@@ -134,7 +139,7 @@ class RoundTrip(threading.Thread):
 
         msg.add_header('X-Mail-Round', str(self.uuid.hex))
         msg.set_content("""This is a TestMail from MailRound.
-Please do not delete this E-Mail Message. 
+Please do not delete this E-Mail Message.
 If MailRound works it will be deleted""")
         return msg
 
@@ -166,7 +171,11 @@ If MailRound works it will be deleted""")
                     if response[1].decode() == 'RECENT' and response[0] > 0:
                         ENDIDLE = True
 
-                    if datetime.datetime.now() > start_timestamp + settings.MAX_MAIL_RECEIVE_TIME:
+                    #max_time=timedelta(minutes=2)
+                    #if settings.MAX_MAIL_RECEIVE_TIME < max_time:
+                    #   max_time = settings.MAX_MAIL_RECEIVE_TIME
+                    max_time = settings.MAX_MAIL_RECEIVE_TIME
+                    if datetime.datetime.now() > start_timestamp + max_time:
                         self.log.warn("Maximal Mailbox watchtime Reached. Terminate")
                         ENDIDLE = True
                         break
@@ -249,14 +258,17 @@ If MailRound works it will be deleted""")
 Error between {}
 ```{}```""".format("->".join(self._name), log_contents),
         }
-
-        req = urllib.request.Request(settings.WEBHOOK_URL)
-        req.add_header('Content-Type', 'application/json; charset=utf-8')
         jsondata = json.dumps(body)
 
         jsondataasbytes = jsondata.encode('utf-8')
+
+        req = urllib.request.Request(settings.WEBHOOK_URL, data=jsondataasbytes)
+        req.add_header('Content-Type', 'application/json; charset=utf-8')
         req.add_header('Content-Length', len(jsondataasbytes))
+        print("NOTIFY_WEBHOOK:" +settings.WEBHOOK_URL )
 
-        response = urllib.request.urlopen(req, jsondataasbytes)
-
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        response = urllib.request.urlopen(req, context=ctx)
         # print("NOTIFY!!!!")

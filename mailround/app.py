@@ -20,6 +20,8 @@ class Command:
     def arguments(self, parser):
         parser.add_argument("-v", "--verbose", help="increase output verbosity",
                             action="store_true")
+        parser.add_argument("-d", "--debug", help="debug output",
+                         action="store_true")
         parser.add_argument("--full-clean", help="Remove all MailRound E-Mails from all Mailboxes", action="store_true")
         parser.add_argument("--no-cleanup", help="Do not Delete testmail", action="store_true")
 
@@ -29,12 +31,19 @@ class Command:
         log.info("Start Mail-Round")
 
         if options.verbose:
+            log.info("starting verbose log"+str(logging.DEBUG))
+
             logging.basicConfig(level=logging.DEBUG)
+            
+            log.debug("test verbose msg")
 
             logger = logging.getLogger('imaplib.imapclient')
             logger.setLevel(logging.INFO)
             logger = logging.getLogger('imapclient.imaplib')
             logger.setLevel(logging.INFO)
+        if options.debug:
+            log.setLevel(logging.DEBUG)
+            logger.setLevel(logging.DEBUG)
 
         if options.no_cleanup:
             setattr(settings, "CLEANUP", False)
@@ -50,7 +59,7 @@ class Command:
         if len(settings.MAIL_ROUND.items()) <= 0:
             raise EnvironmentError("Nothing todo. No configuration provided")
 
-        log.info("Start Mail Check")
+        log.info("Start Mail Check - INTERVAL: "+str(settings.CHECK_INTERVAL)+ " WEBHOOK: "+settings.WEBHOOK_URL)
         last_check = datetime.fromtimestamp(0)
         while True:
 

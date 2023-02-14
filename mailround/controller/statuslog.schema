@@ -87,18 +87,23 @@
               "port": {
                 "$id": "#/properties/config/properties/server/items/properties/port",
                 "type": "integer",
-                "enum": [
-                  25,
-                  587,
-                  465,
-                  110,
-                  995,
-                  993,
-                  143
-                ],
                 "title": "The Port Schema",
                 "description": "Mailserver Port",
                 "default": 0,
+                "enum": [
+                  25,
+                  465,
+                  587,
+                  993,
+                  143,
+                  22225,
+                  25552,
+                  25252,
+                  5587,
+                  55587
+
+                ],
+
                 "examples": [
                   143
                 ]

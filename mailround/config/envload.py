@@ -45,6 +45,7 @@ class LoadEnvironment:
         if "MAILROUND_DEBUG" in settings:
             self.conf.DEBUG = self.bool_parse(settings["MAILROUND_DEBUG"])
 
+
         if "MAILROUND_STATUS_LOG_PATH" in settings:
             self.conf.STATUS_LOG_PATH = settings["MAILROUND_STATUS_LOG_PATH"]
 
