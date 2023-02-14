@@ -136,7 +136,7 @@ class RoundTrip(threading.Thread):
 
     def _gen_mail(self):
         self.log.debug("Generate E-Mail Message")
-        start_timestamp = datetime.datetime.now()
+        start_timestamp = datetime.datetime.utcnow()
 
         msg = email.message.EmailMessage()
 
@@ -163,14 +163,17 @@ Kind Regards
             else:
                 msg.add_header(newheader, str(self.uuid.hex)+'@X-Mail-Round.lan')
         max_time = settings.MAX_MAIL_RECEIVE_TIME
-        date_time = datetime.datetime.now()
+        date_time = datetime.datetime.utcnow()
         msgstr=msgstr+'X-Mail-Round='+str(self.uuid.hex)
         msgstr=msgstr+tmpnewline+'X-Mail-Generated-At='+date_time.strftime("%m/%d/%Y, %H:%M:%S")
 
-        #if datetime.datetime.now() > start_timestamp + max_time
+        #if datetime.datetime.utcnow() > start_timestamp + max_time
         #msg_timeout=datetime.datetime.fromtimestamp(start_timestamp + max_time)
-        msg_timeout=start_timestamp + max_time
-        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+msg_timeout.strftime("%m/%d/%Y, %H:%M:%S")
+        msg_timeout_date=start_timestamp + max_time
+        epoch_time = datetime.datetime(1970, 1, 1)
+        msg_timeout = (msg_timeout_date - epoch_time)
+        #msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+msg_timeout.strftime("%m/%d/%Y, %H:%M:%S")
+        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+str(msg_timeout.total_seconds())
         msg.set_content(msgstr)
         #debug2
         self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
@@ -193,7 +196,7 @@ Kind Regards
     def _receive_idle(self, conn):
         ENDIDLE = False
 
-        start_timestamp = datetime.datetime.now()
+        start_timestamp = datetime.datetime.utcnow()
         conn.idle()
         self.log.debug("Set Mailbox to IDLE mode")
         while not ENDIDLE:
@@ -209,7 +212,7 @@ Kind Regards
                     #if settings.MAX_MAIL_RECEIVE_TIME < max_time:
                     #   max_time = settings.MAX_MAIL_RECEIVE_TIME
                     max_time = settings.MAX_MAIL_RECEIVE_TIME
-                    if datetime.datetime.now() > start_timestamp + max_time:
+                    if datetime.datetime.utcnow() > start_timestamp + max_time:
                         self.log.warn("Maximal Mailbox watchtime Reached. Terminate")
                         ENDIDLE = True
                         break
@@ -287,7 +290,7 @@ Kind Regards
     def receive(self):
         self.log.debug("Wait for E-Mail")
 
-        start_timestamp = datetime.datetime.now()
+        start_timestamp = datetime.datetime.utcnow()
 
         conn = self._mail_in.get_connection()
         conn.select_folder('INBOX')
@@ -298,7 +301,7 @@ Kind Regards
             self._receive_idle(conn)
             FOUND_MAIL_ROUND_TEST = self._seach_in_mailbox(conn)
 
-            if datetime.datetime.now() > start_timestamp + settings.MAX_MAIL_RECEIVE_TIME:
+            if datetime.datetime.utcnow() > start_timestamp + settings.MAX_MAIL_RECEIVE_TIME:
                 self.log.warn("Maximal Mailbox watchtime Reached. Terminate")
                 self._error = True
                 break
