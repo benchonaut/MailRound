@@ -200,7 +200,8 @@ If MailRound works it will be deleted""")
 
         if mail_round_uuid is None:
             self.log.info("Found Mail without UUID ")
-            self.log.info(json.dumps(email_body.get_all("",[]), sort_keys=True, indent=4))
+            for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round');
+            self.log.info(json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4))
             return False
         else:
             self.log.info("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
