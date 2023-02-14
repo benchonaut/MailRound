@@ -263,9 +263,9 @@ Kind Regards
             return False
         else:
             if found_hdr is True:
-                self.log.info("Found Mail with HEADER UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
+                self.log.info("Found Mail with HEADER UUID: "+ str(mail_round_uuid)+ "| MY LOCAL UUID IS:"+self.uuid.hex)
             if found_bdy is True:
-                self.log.info("Found Mail with BODY   UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
+                self.log.info("Found Mail with BODY   UUID: "+self.uuid.hex)
 
         if self.uuid.hex in mail_round_uuid:
             self.log.info("Found Mail with same UUID")
