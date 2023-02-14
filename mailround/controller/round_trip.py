@@ -202,7 +202,7 @@ If MailRound works it will be deleted""")
         if mail_round_uuid is None:
             self.log.info("Found Mail without UUID ")
             for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round'):
-                self.log.info(json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4))
+                self.log.info("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
             parser = HeaderParser()
             h = parser.parsestr(email_body)
             self.log.info(h.keys())
