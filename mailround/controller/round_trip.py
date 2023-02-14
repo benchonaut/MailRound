@@ -180,7 +180,7 @@ Kind Regards
 
         msg.set_content(msgstr)
         #debug2
-        self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
+        self.log.debug("MSG OUT  : "+msg.as_string()+ " | ")
 
         return msg
 
@@ -191,7 +191,7 @@ Kind Regards
         try:
             #conn.send_message(self._gen_mail())
             conn.sendmail(self._mail_out.email,self._mail_in.email,self._gen_mail().as_string())
-            self.log.info("E-Mail sucessfully send via {}".format(self._name[0]))
+            self.log.info("E-Mail sucessfully sent via {}".format(self._name[0]))
         except Exception as e:
             self.log.exception(e)
             pass
@@ -254,7 +254,7 @@ Kind Regards
                     if aux_header is str(self.uuid.hex)+'@X-Mail-Round.lan':
                         found_hdr=True
         if  found_hdr is False and found_bdy is False:
-            self.log.info("Found Mail without UUID ")
+            self.log.debug("Found Mail without UUID ")
             for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round','List-ID','List-Owner','Organization','Auto-Submitted','Archived-At'):
                 self.log.info("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
             #parser = HeaderParser()
@@ -268,7 +268,7 @@ Kind Regards
                 self.log.info("Found Mail with BODY   UUID: "+self.uuid.hex)
 
         if self.uuid.hex in mail_round_uuid:
-            self.log.info("Found Mail with same UUID")
+            self.log.debug("Found Mail with same UUID")
             return True
         else:
             if len(mail_round_uuid) >= 1:
@@ -284,7 +284,7 @@ Kind Regards
         FOUND_MAIL_ROUND_TEST = False
         messages = conn.search()
         for message_id, data in conn.fetch(messages, ['RFC822']).items():
-            self.log.info("found msg ID:"+str(message_id))
+            self.log.debug("found msg ID:"+str(message_id))
 
             if self._verify_mailround_mail(message_id, data):
                 FOUND_MAIL_ROUND_TEST = True
@@ -292,7 +292,7 @@ Kind Regards
                 if hasattr(settings, "CLEANUP"):
                     self._delete_msg(conn, message_id)
                 break
-        self.log.info("found msg_status:"+str(FOUND_MAIL_ROUND_TEST))
+        self.log.debug("found msg_status:"+str(FOUND_MAIL_ROUND_TEST))
         return FOUND_MAIL_ROUND_TEST
 
     def receive(self):
