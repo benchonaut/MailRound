@@ -174,6 +174,8 @@ Kind Regards
         msg_timeout = (msg_timeout_date - epoch_time)
         #msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+msg_timeout.strftime("%m/%d/%Y, %H:%M:%S")
         msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+str(msg_timeout.total_seconds())
+        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-Human='+date_time = datetime.fromtimestamp(int(msg_timeout.total_seconds()))
+
         msg.set_content(msgstr)
         #debug2
         self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
