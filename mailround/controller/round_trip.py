@@ -173,7 +173,8 @@ Kind Regards
         epoch_time = datetime.datetime(1970, 1, 1)
         msg_timeout = (msg_timeout_date - epoch_time)
         #msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+msg_timeout.strftime("%m/%d/%Y, %H:%M:%S")
-        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+str(msg_timeout.total_seconds())
+        msgstr=msgstr+tmpnewline+'X-MailRound-Timeout-At='+str(msg_timeout.total_seconds())
+        msg.add_header('X-MailRound-Timeout-At',str(msg_timeout.total_seconds())
         msg_timeout=datetime.datetime.fromtimestamp(msg_timeout.total_seconds())
         msgstr=msgstr+tmpnewline+'X-Mail-Timeout-Human='+str(msg_timeout.strftime("%m/%d/%Y, %H:%M:%S"))
 
