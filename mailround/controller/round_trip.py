@@ -185,8 +185,8 @@ Kind Regards
         conn = self._mail_out.get_connection()
 
         try:
-            #conn.send_message(self._gen_mail())
-            conn.sendmail(self._mail_out.email,self._mail_in.email,self._gen_mail())
+            conn.send_message(self._gen_mail())
+            #conn.sendmail(self._mail_out.email,self._mail_in.email,self._gen_mail())
             self.log.info("E-Mail sucessfully send via {}".format(self._name[0]))
         except Exception as e:
             self.log.exception(e)
