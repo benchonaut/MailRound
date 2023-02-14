@@ -2,6 +2,7 @@ from datetime import timedelta
 import datetime
 import email.message
 import email.utils
+from email.parser import HeaderParser
 import io
 import json
 import logging
@@ -202,6 +203,9 @@ If MailRound works it will be deleted""")
             self.log.info("Found Mail without UUID ")
             for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round'):
                 self.log.info(json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4))
+            parser = HeaderParser()
+            h = parser.parsestr(email_body)
+            self.log.info(h.keys())
             return False
         else:
             self.log.info("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
