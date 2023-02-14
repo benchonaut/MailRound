@@ -233,10 +233,11 @@ Kind Regards
         ## in depth body search as fallback 1
         found_bdy=False
         if found_hdr is False:
-            body = email_body.get_body(('plain',))
-            if body:
-                body = body.get_content()
-            if(str(body).contains('X-Mail-Round='+str(self.uuid.hex))):
+            #body = email_body.get_body(('plain',))
+            #if body:
+            #    body = body.get_content()
+
+            if(str(email_body.as_string()).contains('X-Mail-Round='+str(self.uuid.hex))):
                 found_bdy=True
         ## in depth aux header search as fallback 2
         if found_hdr is False :
