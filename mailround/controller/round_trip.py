@@ -189,6 +189,7 @@ If MailRound works it will be deleted""")
         conn.idle_done()
 
     def _verify_mailround_mail(self, msg_id, data):
+
         if b"RFC822" not in data:
             return False
         bin_body = data[b"RFC822"]
@@ -197,13 +198,13 @@ If MailRound works it will be deleted""")
         mail_round_uuid = email_body.get_all("X-Mail-Round")
 
         if mail_round_uuid is None:
-            self.log.debug("Found Mail without UUID ")
+            self.log.info("Found Mail without UUID ")
             return False
         else:
-            self.log.debug("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
+            self.log.info("Found Mail with UUID "+ str(mail_round_uuid)+ "| MY LOCAL UID IS:"+self.uuid.hex)
 
         if self.uuid.hex in mail_round_uuid:
-            self.log.debug("Found Mail with same UUID")
+            self.log.info("Found Mail with same UUID")
             return True
         else:
             if len(mail_round_uuid) >= 1:
