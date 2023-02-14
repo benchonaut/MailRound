@@ -146,7 +146,7 @@ class RoundTrip(threading.Thread):
             if newheader == 'X-Mail-Round':
                 msg.add_header(newheader, str(self.uuid.hex))
             else:
-                msg.add_header(newheader+'@X-Mail-Round.lan', str(self.uuid.hex))
+                msg.add_header(newheader, str(self.uuid.hex)+'@X-Mail-Round.lan')
 
         msgstr="""This is a TestMail from MailRound.
 Please do not delete this E-Mail Message.
