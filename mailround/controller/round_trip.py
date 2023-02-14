@@ -142,11 +142,7 @@ class RoundTrip(threading.Thread):
         msg["To"] = self._mail_in.email
         msg['Subject'] = "[MailRound]"
 
-        for newheader in ('List-ID','List-Owner','Organization','Auto-Submitted','Archived-At','X-Mail-Round'):
-            if newheader == 'X-Mail-Round':
-                msg.add_header(newheader, str(self.uuid.hex))
-            else:
-                msg.add_header(newheader, str(self.uuid.hex)+'@X-Mail-Round.lan')
+
 
         msgstr="""This is a TestMail from MailRound.
 Please do not delete this E-Mail Message.
@@ -156,7 +152,22 @@ Kind Regards
 
 
 """
+        tmpnewline="""
+
+"""
+        for newheader in ('List-ID','List-Owner','Organization','Auto-Submitted','Archived-At','X-Mail-Round'):
+            if newheader == 'X-Mail-Round':
+                msg.add_header(newheader, str(self.uuid.hex))
+
+            else:
+                msg.add_header(newheader, str(self.uuid.hex)+'@X-Mail-Round.lan')
+
+        msgstr=msgstr+tmpnewline+'X-Mail-Generated-At='+date_time.strftime("%m/%d/%Y, %H:%M:%S")
+
+        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+date_time.strftime("%m/%d/%Y, %H:%M:%S")
+
         msg.set_content(msgstr+'X-Mail-Round='+str(self.uuid.hex))
+        #debug2
         self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
 
         return msg
@@ -208,11 +219,27 @@ Kind Regards
             self.log.info("Found Mail without RFC822")
             return False
         bin_body = data[b"RFC822"]
-
         email_body = email.message_from_bytes(bin_body)
+        found_hdr=False
         mail_round_uuid = email_body.get_all("X-Mail-Round")
-
-        if mail_round_uuid is None:
+        if mail_round_uuid is not  None:
+            found_hdr=True
+        ## in depth body search as fallback 1
+        found_bdy=False
+        if found_hdr is False:
+            body = msg.get_body(('plain',))
+            if body:
+                body = body.get_content()
+            if(str(body).contains('X-Mail-Round='+str(self.uuid.hex))):
+                found_bdy=True
+        ## in depth aux header search as fallback 2
+        if found_hdr is False :
+            for dumpheader in('List-ID','List-Owner','Organization','Auto-Submitted','Archived-At'):
+                aux_header = email_body.get_all("X-Mail-Round")
+                if aux_header is not None:
+                    if aux_header is str(self.uuid.hex)+'@X-Mail-Round.lan':
+                        found_hdr=True
+        if  found_hdr is False and found_bdy is False:
             self.log.info("Found Mail without UUID ")
             for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round','List-ID','List-Owner','Organization','Auto-Submitted','Archived-At'):
                 self.log.info("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
