@@ -216,6 +216,7 @@ If MailRound works it will be deleted""")
         FOUND_MAIL_ROUND_TEST = False
         messages = conn.search()
         for message_id, data in conn.fetch(messages, ['RFC822']).items():
+            self.log.info("found msg ID:"+str(message_id))
 
             if self._verify_mailround_mail(message_id, data):
                 FOUND_MAIL_ROUND_TEST = True
@@ -223,6 +224,7 @@ If MailRound works it will be deleted""")
                 if hasattr(settings, "CLEANUP"):
                     self._delete_msg(conn, message_id)
                 break
+        self.log.info("found msg_status:"+str(FOUND_MAIL_ROUND_TEST))
         return FOUND_MAIL_ROUND_TEST
 
     def receive(self):
