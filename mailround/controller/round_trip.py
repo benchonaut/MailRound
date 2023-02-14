@@ -161,12 +161,14 @@ Kind Regards
 
             else:
                 msg.add_header(newheader, str(self.uuid.hex)+'@X-Mail-Round.lan')
-
+        msgstr+'X-Mail-Round='+str(self.uuid.hex)
         msgstr=msgstr+tmpnewline+'X-Mail-Generated-At='+date_time.strftime("%m/%d/%Y, %H:%M:%S")
-
-        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+date_time.strftime("%m/%d/%Y, %H:%M:%S")
-
-        msg.set_content(msgstr+'X-Mail-Round='+str(self.uuid.hex))
+        max_time = settings.MAX_MAIL_RECEIVE_TIME
+        date_time = datetime.now()
+        #if datetime.datetime.now() > start_timestamp + max_time
+        msg_timeout=datetime.fromtimestamp(start_timestamp + max_time)
+        msgstr=msgstr+tmpnewline+'X-Mail-Timeout-At='+msg_timeout.strftime("%m/%d/%Y, %H:%M:%S")
+        msg.set_content(msgstr)
         #debug2
         self.log.info("MSG OUT  : "+msg.as_string()+ " | ")
 
