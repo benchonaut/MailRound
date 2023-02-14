@@ -256,7 +256,7 @@ Kind Regards
         if  found_hdr is False and found_bdy is False:
             self.log.debug("Found Mail without UUID ")
             for dumpheader in('From','To', 'CC', 'BCC','X-Mail-Round','List-ID','List-Owner','Organization','Auto-Submitted','Archived-At'):
-                self.log.info("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
+                self.log.debug("HEADER "+dumpheader+" : "+json.dumps(email_body.get_all(dumpheader), sort_keys=True, indent=4)+ " | ")
             #parser = HeaderParser()
             #h = parser.parsestr(bin_body)
             #self.log.info(h.keys())
